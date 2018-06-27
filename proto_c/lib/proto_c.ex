@@ -1,7 +1,7 @@
 require Logger
 
 defmodule ProtoC do
-    def accept(port) do
+  def accept(port) do
     # The options below mean:
     #
     # 1. `:binary` - receives data as binaries (instead of lists)
@@ -11,6 +11,7 @@ defmodule ProtoC do
     #
     {:ok, socket} =
       :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+
     Logger.info("Accepting connections on port #{port}")
     loop_acceptor(socket)
   end
