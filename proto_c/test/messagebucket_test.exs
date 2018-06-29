@@ -12,4 +12,8 @@ defmodule ProtoC.MessageBucketTest do
     ProtoC.MessageBucket.put(bucket, "bucket1", ["Hello"])
     assert ProtoC.MessageBucket.get(bucket, "bucket1") == ["Hello"]
   end
+
+  test "are temporary workers" do
+    assert Supervisor.child_spec(ProtoC.MessageBucket, []).restart == :temporary
+  end
 end
