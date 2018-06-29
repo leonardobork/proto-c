@@ -7,13 +7,13 @@ defmodule ProtoCServer.Application do
 
   def start(_type, _args) do
     # List all child processes to be supervised
+    port = String.to_integer(System.get_env("PORT") || "4040")
+
     children = [
-      # Starts a worker by calling: ProtoCServer.Worker.start_link(arg)
-      # {ProtoCServer.Worker, arg},
+      {Task.Supervisor, name: ProtoCServer.TaskSupervisor},
+      Supervisor.child_spec({Task, fn -> ProtoCServer.accept(4040) end}, restart: :permanent)
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: ProtoCServer.Supervisor]
     Supervisor.start_link(children, opts)
   end
