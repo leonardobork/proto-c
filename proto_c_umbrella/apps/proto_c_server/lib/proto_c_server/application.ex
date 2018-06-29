@@ -12,7 +12,7 @@ defmodule ProtoCServer.Application do
       worker(ProtoCServer, [8000])
     ]
 
-    opts = [strategy: :one_for_one, name: SimpleTCP.Supervisor]
+    opts = [strategy: :one_for_one, name: ProtoCServer.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
