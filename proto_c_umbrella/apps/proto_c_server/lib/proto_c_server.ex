@@ -1,42 +1,48 @@
 require Logger
 
 defmodule ProtoCServer do
-  def accept(port) do
-    # The options below mean:
-    #
-    # 1. `:binary` - receives data as binaries (instead of lists)
-    # 2. `packet: :line` - receives data line by line
-    # 3. `active: false` - blocks on `:gen_tcp.recv/2` until data is available
-    # 4. `reuseaddr: true` - allows us to reuse the address if the listener crashes
-    #
-    {:ok, socket} =
-      :gen_tcp.listen(port, [:binary, packet: :line, active: false, reuseaddr: true])
+  import Socket
 
-    Logger.info("Accepting connections on port #{port}")
-    loop_acceptor(socket)
+  def start_link(port) do
+    pid = spawn_link(fn -> init(port) end)
+    {:ok, pid}
   end
 
-  defp loop_acceptor(socket) do
-    {:ok, client} = :gen_tcp.accept(socket)
-    {:ok, pid} = Task.Supervisor.start_child(ProtoCServer.TaskSupervisor, fn -> serve(client) end)
-    :ok = :gen_tcp.controlling_process(client, pid)
-    loop_acceptor(socket)
+  def init(port) do
+    server = Socket.TCP.listen!(port, packet: :line)
+    loop_connection(server)
   end
 
-  defp serve(socket) do
-    socket
-    |> read_line()
-    |> write_line(socket)
+  defp loop_connection(server) do
+    # Accept a TCP connection
+    client = Socket.TCP.accept!(server)
 
-    serve(socket)
+    # Start our listening process in another process so it doesn't block
+    spawn(fn -> init_listener(client) end)
+
+    # Get the next connection
+    loop_connection(server)
   end
 
-  defp read_line(socket) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-    data
+  def init_listener(client) do
+    # Start our sending process.
+    {:ok, _pid} = ProtoCServer.Sender.start_link(client)
+    listen_for_msg(client)
   end
 
-  defp write_line(line, socket) do
-    :gen_tcp.send(socket, line)
+  defp listen_for_msg(client) do
+    case Socket.Stream.recv(client) do
+      {:ok, data} ->
+        # Use gproc to cast the message {:msg, data} to everyone subscribed to :something
+        GenServer.cast({:via, :gproc, {:p, :l, :something}}, {:msg, data})
+        # Loop for another message
+        listen_for_msg(client)
+
+      {:error, :closed} ->
+        :ok
+
+      other ->
+        IO.inspect(other)
+    end
   end
 end

@@ -6,15 +6,13 @@ defmodule ProtoCServer.Application do
   use Application
 
   def start(_type, _args) do
-    # List all child processes to be supervised
-    port = String.to_integer(System.get_env("PORT") || "4040")
+    import Supervisor.Spec, warn: false
 
     children = [
-      {Task.Supervisor, name: ProtoCServer.TaskSupervisor},
-      Supervisor.child_spec({Task, fn -> ProtoCServer.accept(4040) end}, restart: :permanent)
+      worker(ProtoCServer, [8000])
     ]
 
-    opts = [strategy: :one_for_one, name: ProtoCServer.Supervisor]
+    opts = [strategy: :one_for_one, name: SimpleTCP.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
