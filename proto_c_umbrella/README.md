@@ -1,4 +1,0 @@
-# ProtoCUmbrella
-
-**TODO: Add description**
-
