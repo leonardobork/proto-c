@@ -33,9 +33,14 @@ defmodule ProtoCServer do
   defp listen_for_msg(client) do
     case Socket.Stream.recv(client) do
       {:ok, data} ->
-        # Use gproc to cast the message {:msg, data} to everyone subscribed to :something
-        GenServer.cast({:via, :gproc, {:p, :l, :something}}, {:msg, data})
-        # Loop for another message
+        case ProtoCServer.Command.parse(data, client) do
+          {:ok, command} ->
+            ProtoCServer.Command.run(command)
+
+          {:error, _} = err ->
+            err
+        end
+
         listen_for_msg(client)
 
       {:error, :closed} ->

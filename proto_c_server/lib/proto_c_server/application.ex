@@ -9,7 +9,8 @@ defmodule ProtoCServer.Application do
     import Supervisor.Spec, warn: false
 
     children = [
-      worker(ProtoCServer, [8000])
+      worker(ProtoCServer, [8000]),
+      ProtoCServer.Message
     ]
 
     opts = [strategy: :one_for_one, name: ProtoCServer.Supervisor]

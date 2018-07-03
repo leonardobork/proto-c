@@ -7,8 +7,7 @@ defmodule ProtoCServer.Sender do
   end
 
   def init(socket) do
-    # Register the process with gproc and subcscribe to :something
-    :gproc.reg({:p, :l, :something})
+    :gproc.reg({:p, :l, :channel})
     {:ok, socket}
   end
 
