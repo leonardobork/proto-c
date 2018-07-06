@@ -5,7 +5,7 @@ defmodule ProtoCServer.Message do
   Starts a new bucket.
   """
   def start_link(_opts) do
-    Agent.start_link(fn -> %{} end, name: __MODULE__)
+    Agent.start_link(fn -> [] end, name: __MODULE__)
   end
 
   @doc """
@@ -21,5 +21,6 @@ defmodule ProtoCServer.Message do
   def put(value) do
     data = ProtoCServer.Command.parse_message(value)
     Agent.update(__MODULE__, fn list -> [data | list] end)
+    {:ok, data}
   end
 end
