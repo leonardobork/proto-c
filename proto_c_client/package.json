@@ -1,6 +1,6 @@
 {
-  "name": "preact-boilerplate",
-  "version": "6.0.0",
+  "name": "proto_c_client",
+  "version": "1.0.0",
   "description": "Ready-to-go Preact starter project powered by webpack.",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --progress",
@@ -95,5 +95,17 @@
     "promise-polyfill": "^7.0.1",
     "proptypes": "^1.0.0",
     "serve": "^6.0.0"
-  }
+  },
+  "main": "webpack.config.babel.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leonardobork/proto-c.git"
+  },
+  "bugs": {
+    "url": "https://github.com/leonardobork/proto-c/issues"
+  },
+  "homepage": "https://github.com/leonardobork/proto-c#readme"
 }
