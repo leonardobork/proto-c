@@ -27,7 +27,7 @@ To get all messages from server:
 
 *GET;*
 
-##Contribuiting
+## Contribuiting
 
 To contribute w/ ideias go for an **ISSUE, for coding purposes try a **PR
 
