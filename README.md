@@ -29,6 +29,6 @@ To get all messages from server:
 
 ## Contribuiting
 
-To contribute w/ ideias go for an **ISSUE, for coding purposes try a **PR
+To contribute w/ ideias go for an **ISSUE**, for coding purposes try a **PR**
 
 :smile:
