@@ -1,4 +1,4 @@
-# Proto-C 
+# proto_c 
 
 A simple chat server utilizing the [Socket](https://github.com/meh/elixir-socket) lib with some sauce :fire:
 
